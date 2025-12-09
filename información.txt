@@ -1,0 +1,4 @@
+Para instalar las libreria se hace con
+
+python 
+python -m pip install streamlit
