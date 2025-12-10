@@ -2,3 +2,7 @@ Para instalar las libreria se hace con
 
 python 
 python -m pip install streamlit
+
+pip install xlrd==1.2.0
+
+pip install openpyxl

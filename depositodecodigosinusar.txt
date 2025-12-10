@@ -1,0 +1,42 @@
+
+###GuiaPractica.
+# streamlit_app.py (fragmento)
+import streamlit as st
+import pandas as pd
+import joblib
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+st.title("Modelo Supervisado: Predicción de Aprobación")
+
+uploaded = st.file_uploader("Sube academic_performance_master.csv", type=['csv'])
+if uploaded is not None:
+    df = pd.read_csv(uploaded)
+    st.write("Vista previa")
+    st.dataframe(df.head())
+
+    # Parámetros ajustables
+    test_size = st.slider("Tamaño test (%)", 10, 40, 20)
+    C_val = st.number_input("C (regularización) en LogisticRegression", min_value=0.01, max_value=10.0, value=1.0, step=0.01)
+
+    if st.button("Entrenar modelo"):
+        # (Aquí repetirías la preparación: crear 'aprobado', seleccionar columnas, pipeline)
+        # Para mantener el ejemplo corto, asumimos que tienes la función train_model(df, test_size, C_val)
+        clf, X_test, y_test, y_pred = train_model(df, test_size/100.0, C_val)  # debes implementar train_model
+        acc = accuracy_score(y_test, y_pred)
+        st.write(f"Accuracy: {acc:.4f}")
+        st.text("Reporte de clasificación:")
+        st.text(classification_report(y_test, y_pred))
+
+        # Matriz de confusión
+        cm = confusion_matrix(y_test, y_pred)
+        fig, ax = plt.subplots()
+        sns.heatmap(cm, annot=True, fmt='d', ax=ax)
+        ax.set_xlabel("Predicho")
+        ax.set_ylabel("Real")
+        st.pyplot(fig)
+
+        # Guardar modelo si quieres
+        joblib.dump(clf, "logreg_model_aprobado_streamlit.joblib")
+        st.success("Modelo entrenado y guardado.")
